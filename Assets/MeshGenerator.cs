@@ -23,10 +23,14 @@ public class MeshGenerator : MonoBehaviour
     void createMesh(){
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
+        float[] octaveFrequencies = {1f,1.5f,2f,2.5f};
+        float[] octaveAmplitudes = {1f,0.9f,0.7f,0f};
         //vertices
         for (int index = 0, z = 0; z <= zSize; z++){
             for (int x = 0; x <= xSize; x++){
-                float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //perlin noise map to randomize y height
+                float y = octaveAmplitudes[Random.Range(0, 3)]* Mathf.PerlinNoise(
+                    octaveFrequencies[Random.Range(0, 3)]* x + .3f,
+                    octaveFrequencies[Random.Range(0, 3)]* z + .3f) * 2f;//perlin noise map to randomize y height
                 vertices[index] = new Vector3(x, y, z);
                 index++;
             }
@@ -38,18 +42,18 @@ public class MeshGenerator : MonoBehaviour
         int tris = 0;
         for (int z = 0; z < zSize; z++){
             for (int i = 0; i < xSize; i++){
-            //first triangle of quad
-            triangles[tris] = vert;                 //(0,0,0) coord on quad
-            triangles[tris + 1] = vert + xSize + 1; //(0,0,1)
-            triangles[tris + 2] = vert + 1;          //(1,0,0)
+                //first triangle of quad
+                triangles[tris] = vert;                 //(0,0,0) coord on quad
+                triangles[tris + 1] = vert + xSize + 1; //(0,0,1)
+                triangles[tris + 2] = vert + 1;          //(1,0,0)
 
-            //second triangle of quad
-            triangles[tris + 3] = vert + 1;         //(1,0,0)
-            triangles[tris + 4] = vert + xSize + 1; //(0,0,1)
-            triangles[tris + 5] = vert + xSize + 2; //(1,0,1)
+                //second triangle of quad
+                triangles[tris + 3] = vert + 1;         //(1,0,0)
+                triangles[tris + 4] = vert + xSize + 1; //(0,0,1)
+                triangles[tris + 5] = vert + xSize + 2; //(1,0,1)
 
-            vert++;
-            tris += 6;
+                vert++;
+                tris += 6;
             }
             vert++;
         }
@@ -60,6 +64,11 @@ public class MeshGenerator : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+
+        //So you don't fall through terrain mesh
+        mesh.RecalculateBounds();
+        MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
+        meshCollider.sharedMesh = mesh;
     }
 
     private void OnDrawGizmos(){
