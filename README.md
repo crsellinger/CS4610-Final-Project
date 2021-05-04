@@ -9,3 +9,5 @@ camera and player rotate together**
 refresh: testing push upstream and zip download to local machine
 
 Update week #2.1: Added collider for terrain mesh
+
+Update week #2.2: Added more natural terrain, updated player coordinates to spawn on mesh (hardcoded), couldn't figure out how to dynamically spawn
