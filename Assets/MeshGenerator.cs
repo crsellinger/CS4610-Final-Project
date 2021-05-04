@@ -8,8 +8,8 @@ public class MeshGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
 
-    public int xSize = 20;
-    public int zSize = 20;
+    public int xSize;
+    public int zSize;
 
     // Start is called before the first frame update
     void Start(){
@@ -22,18 +22,27 @@ public class MeshGenerator : MonoBehaviour
 
     void createMesh(){
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
+        float maxHeight = 20f;
 
-        float[] octaveFrequencies = {1f,1.5f,2f,2.5f};
-        float[] octaveAmplitudes = {1f,0.9f,0.7f,0f};
+        //ground offset to get smoother looking terrain
+        float zoff = 0f;
+
         //vertices
         for (int index = 0, z = 0; z <= zSize; z++){
+
+            //ground offset to get smoother looking terrain
+            float xoff = 0;
+
             for (int x = 0; x <= xSize; x++){
-                float y = octaveAmplitudes[Random.Range(0, 3)]* Mathf.PerlinNoise(
-                    octaveFrequencies[Random.Range(0, 3)]* x + .3f,
-                    octaveFrequencies[Random.Range(0, 3)]* z + .3f) * 2f;//perlin noise map to randomize y height
+
+                //Note: if maxHeight is changed, adjust offsets accordingly -> increase maxHeight, decrease offset and vice versa
+                float y = Mathf.PerlinNoise(xoff + 0f, zoff + 0f) * maxHeight;   //perlin noise map to randomize y height
                 vertices[index] = new Vector3(x, y, z);
                 index++;
+                xoff += 0.02f;  //incrementing offset makes smoother gradation, smaller value = smoother terrain (i.e. bigger hills)
             }
+
+            zoff += 0.02f;
         }
 
         //drawing triangles
