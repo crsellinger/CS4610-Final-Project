@@ -5,7 +5,7 @@ using UnityEngine;
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
-    Vector3[] vertices;
+    public static Vector3[] vertices;
     int[] triangles;
 
     public int xSize;
@@ -66,6 +66,12 @@ public class MeshGenerator : MonoBehaviour
             }
             vert++;
         }
+
+
+        for (int i = 0; i < objectsToSpawn; i++)
+        {
+            SpreadObject();
+        }
     }
 
     void updateMesh(){
@@ -88,6 +94,19 @@ public class MeshGenerator : MonoBehaviour
         for (int i = 0; i < vertices.Length; i++){
             Gizmos.DrawSphere(vertices[i], .1f);
         }
+    }
+
+    public GameObject[] objectsToSpread;
+    public int objectsToSpawn = 30;
+    public float objectXSpread = 100;
+    public float objectZSpread = 100;
+
+    void SpreadObject()
+    {
+        int r = Random.Range(0, vertices.Length - 1);
+        int r2 = Random.Range(0, objectsToSpread.Length - 1);
+        Vector3 randPos = vertices[r];
+        Instantiate(objectsToSpread[r2], randPos, Quaternion.identity);
     }
 
     // Update is called once per frame
