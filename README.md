@@ -11,3 +11,7 @@ refresh: testing push upstream and zip download to local machine
 Update week #2.1: Added collider for terrain mesh
 
 Update week #2.2: Added more natural terrain, updated player coordinates to spawn on mesh (hardcoded), couldn't figure out how to dynamically spawn
+
+Update week #2.3: Added procedually generated game objects.
+
+Update week #3.1: Added tree game objects to Scene. Added colliders, shaders, and material to game objects. Added material to terrain.
