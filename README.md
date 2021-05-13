@@ -15,3 +15,5 @@ Update week #2.2: Added more natural terrain, updated player coordinates to spaw
 Update week #2.3: Added procedually generated game objects.
 
 Update week #3.1: Added tree game objects to Scene. Added colliders, shaders, and material to game objects. Added material to terrain.
+
+Update week #3.2: Added dynamic player spawn, Finished terrain generation (previous code was always the same position of noise map, now it looks different everytime you spawn in). I think this is our final update before due date.
