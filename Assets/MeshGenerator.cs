@@ -24,6 +24,10 @@ public class MeshGenerator : MonoBehaviour
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
         float maxHeight = 20f;
 
+        //Used to generate noise map coord offset, so player doesn't spawn in same spot of terrain everytime
+        float spawnXCoord = Random.Range(-10000f, 10000);
+        float spawnZCoord = Random.Range(-10000f, 10000);
+
         //ground offset to get smoother looking terrain
         float zoff = 0f;
 
@@ -36,8 +40,9 @@ public class MeshGenerator : MonoBehaviour
             for (int x = 0; x <= xSize; x++){
 
                 //Note: if maxHeight is changed, adjust offsets accordingly -> increase maxHeight, decrease offset and vice versa
-                float y = Mathf.PerlinNoise(xoff + 0f, zoff + 0f) * maxHeight;   //perlin noise map to randomize y height
+                float y = Mathf.PerlinNoise(xoff + spawnXCoord, zoff + spawnZCoord) * maxHeight;   //perlin noise map to randomize y height
                 vertices[index] = new Vector3(x, y, z);
+
                 index++;
                 xoff += 0.02f;  //incrementing offset makes smoother gradation, smaller value = smoother terrain (i.e. bigger hills)
             }
@@ -67,11 +72,12 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
 
-
         for (int i = 0; i < objectsToSpawn; i++)
         {
             SpreadObject();
         }
+
+        playerSpawner();
     }
 
     void updateMesh(){
@@ -98,8 +104,8 @@ public class MeshGenerator : MonoBehaviour
 
     public GameObject[] objectsToSpread;
     public int objectsToSpawn = 30;
-    public float objectXSpread = 100;
-    public float objectZSpread = 100;
+    public int objectXSpread = 100;
+    public int objectZSpread = 100;
 
     void SpreadObject()
     {
@@ -107,6 +113,13 @@ public class MeshGenerator : MonoBehaviour
         int r2 = Random.Range(0, objectsToSpread.Length - 1);
         Vector3 randPos = vertices[r];
         Instantiate(objectsToSpread[r2], randPos, Quaternion.identity);
+    }
+
+    //spawns player on position of middle vertex on terrain
+    void playerSpawner(){
+        Vector3 spawnPoint = vertices[vertices.Length/2];
+        spawnPoint.y += 2;
+        Instantiate(GameObject.Find("Player"), spawnPoint, Quaternion.identity);
     }
 
     // Update is called once per frame
